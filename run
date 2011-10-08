@@ -1,0 +1,4 @@
+#! /bin/bash
+USE_CCACHE=1
+make -j16 CONFIG_OVERCLOCK=y ARCH=arm CROSS_COMPILE=~/bin/linux-x86/bin/arm-eabi- zImage
+#make -j4 ARCH=arm CROSS_COMPILE=arm-eabi- zImage
