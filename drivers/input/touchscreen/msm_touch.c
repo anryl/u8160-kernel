@@ -106,12 +106,12 @@
 #define TOUCH_KEY_MAX_REGION    (Y_MAX - 824)
 
 #define TOUCH_OFFSET    4
-
+//72244 0 -6254083 0 80100 -6699436 65536
 static int32_t msm_tscal_scaler = 65536;
-static int32_t msm_tscal_xscale = 70046;
-static int32_t msm_tscal_xoffset = -4191987;
-static int32_t msm_tscal_yscale = 71735;
-static int32_t msm_tscal_yoffset = -3004437;
+static int32_t msm_tscal_xscale = 72244;
+static int32_t msm_tscal_xoffset = -6254083;
+static int32_t msm_tscal_yscale = 80100;
+static int32_t msm_tscal_yoffset = -6699436;
 
 //static int32_t msm_tscal_xscale = 67701;
 //static int32_t msm_tscal_xoffset = -4191987;

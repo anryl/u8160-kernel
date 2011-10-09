@@ -185,8 +185,8 @@ static struct platform_device huawei_battery_device = {
 static struct usb_mass_storage_platform_data usb_mass_storage_pdata = {
 	.nluns          = 0x02,
 	.buf_size       = 16384,
-	.vendor         = "GOOGLE",
-	.product        = "Mass storage",
+	.vendor         = "Huawei",
+	.product        = "U8120",
 	.release        = 0xffff,
 };
 
@@ -3953,7 +3953,7 @@ int board_surport_fingers(bool * is_surport_fingers)
 
     if( machine_is_msm7x25_u8500() || machine_is_msm7x25_um840() \
      || machine_is_msm7x25_u8350() || machine_is_msm7x25_u8130() \
-	 || machine_is_msm7x25_c8510() )
+     || machine_is_msm7x25_c8510() || machine_is_msm7x25_u8160() )
     {
          *is_surport_fingers = true;
     }
