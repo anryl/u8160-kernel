@@ -106,12 +106,23 @@
 #define TOUCH_KEY_MAX_REGION    (Y_MAX - 824)
 
 #define TOUCH_OFFSET    4
-//72244 0 -6254083 0 80100 -6699436 65536
+//72244 0 -6254083 0 80100 -6699436 65536         x rozsah  22 - 222   //  5-235 
+
 static int32_t msm_tscal_scaler = 65536;
-static int32_t msm_tscal_xscale = 72244;
+static int32_t msm_tscal_xscale = 72244; // (222*65536 + 65536/2 +6254083 )/235  --- 88663.161702128   /240 --- 86816.0125
 static int32_t msm_tscal_xoffset = -6254083;
 static int32_t msm_tscal_yscale = 80100;
 static int32_t msm_tscal_yoffset = -6699436;
+
+
+//static int32_t msm_tscal_scaler = 16777216;
+//static int32_t msm_tscal_xscale = 18494464;
+//static int32_t msm_tscal_xoffset = -1601045248;
+//static int32_t msm_tscal_yscale = 20505600;
+//static int32_t msm_tscal_yoffset = -1715055616;
+//     5 * 72244 + -6254083 +65536 / 131072 
+//x = (x*msm_tscal_xscale + msm_tscal_xoffset + msm_tscal_scaler/2)/msm_tscal_scaler;
+//y = (y*msm_tscal_yscale + msm_tscal_yoffset + msm_tscal_scaler/2)/msm_tscal_scaler;
 
 //static int32_t msm_tscal_xscale = 67701;
 //static int32_t msm_tscal_xoffset = -4191987;
@@ -454,9 +465,19 @@ static void ts_update_pen_state(struct ts *ts, int x, int y, int pressure)
     TSSC("{%d, %d}, pressure = %3d\n", x, y, pressure);
     if (pressure) {
         // Calibrate
+        printk(KERN_ERR "X= {%d}", x);
+	printk(KERN_ERR "Y= {%d}", y);
+        printk(KERN_INFO "Input Values: {%d, %d},",
+                 x, y);
+
         x = (x*msm_tscal_xscale + msm_tscal_xoffset + msm_tscal_scaler/2)/msm_tscal_scaler;
         y = (y*msm_tscal_yscale + msm_tscal_yoffset + msm_tscal_scaler/2)/msm_tscal_scaler;
 
+	printk(KERN_ERR "=X= {%d}", x);
+	printk(KERN_ERR "=Y= {%d}", y);
+
+        printk(KERN_INFO "Return Values: {%d, %d},",
+                 x, y);
 
 
 
@@ -467,6 +488,8 @@ static void ts_update_pen_state(struct ts *ts, int x, int y, int pressure)
 
         input_report_abs(ts->input, ABS_X, x);
         input_report_abs(ts->input, ABS_Y, y);
+	printk(KERN_ERR "=ABS_X= {%d}", ABS_X);
+	printk(KERN_ERR "=ABS_Y= {%d}", ABS_Y);
         input_report_abs(ts->input, ABS_PRESSURE, pressure);
         input_report_key(ts->input, BTN_TOUCH, !!pressure);
     } else {

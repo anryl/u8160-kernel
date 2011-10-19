@@ -181,7 +181,7 @@ static struct platform_device huawei_battery_device = {
 };
 
 #endif
-#ifdef CONFIG_USB_FUNCTION
+//#ifdef CONFIG_USB_FUNCTION
 static struct usb_mass_storage_platform_data usb_mass_storage_pdata = {
 	.nluns          = 0x02,
 	.buf_size       = 16384,
@@ -197,7 +197,7 @@ static struct platform_device mass_storage_device = {
 		.platform_data          = &usb_mass_storage_pdata,
 	},
 };
-#endif
+//#endif
 #ifdef CONFIG_USB_ANDROID
 /* dynamic composition */
 static struct usb_composition usb_func_composition[] = {
@@ -248,6 +248,51 @@ static struct usb_composition usb_func_composition[] = {
 		.adb_product_id     = 0x9018,
 		.adb_functions	    = 0x27614,
 	},
+
+	{
+		.product_id         = 0x9012,
+		.functions	    = 0x5, /* 0101 */
+	},
+
+	{
+		.product_id         = 0x9013,
+		.functions	    = 0x15, /* 10101 */
+	},
+
+	{
+		.product_id         = 0x9014,
+		.functions	    = 0x30, /* 110000 */
+	},
+
+	{
+		.product_id         = 0x9016,
+		.functions	    = 0xD, /* 01101 */
+	},
+
+	{
+		.product_id         = 0x9017,
+		.functions	    = 0x1D, /* 11101 */
+	},
+
+	{
+		.product_id         = 0xF000,
+		.functions	    = 0x10, /* 10000 */
+	},
+
+	{
+		.product_id         = 0xF009,
+		.functions	    = 0x20, /* 100000 */
+	},
+
+	{
+		.product_id         = 0x9018,
+		.functions	    = 0x1F, /* 011111 */
+	},
+
+	
+	
+	
+	
 #endif
 
 #ifdef CONFIG_USB_AUTO_INSTALL
@@ -387,7 +432,7 @@ static struct platform_device smc91x_device = {
 	.resource	= smc91x_resources,
 };
 
-#ifdef CONFIG_USB_FUNCTION
+//#ifdef CONFIG_USB_FUNCTION
 static struct usb_function_map usb_functions_map[] = {
 	{"diag", 0},
 	{"adb", 1},
@@ -397,7 +442,7 @@ static struct usb_function_map usb_functions_map[] = {
 	{"ethernet", 5},
 	{"rmnet", 6},
 };
-
+#ifdef CONFIG_USB_FUNCTION
 /* dynamic composition */
 static struct usb_composition usb_func_composition[] = {
 	{
@@ -453,7 +498,7 @@ static struct usb_composition usb_func_composition[] = {
 #endif
 
 };
-
+#endif //Anryl
 static struct msm_hsusb_platform_data msm_hsusb_pdata = {
 	.version	= 0x0100,
 	.phy_info	= (USB_PHY_INTEGRATED | USB_PHY_MODEL_65NM),
@@ -467,8 +512,8 @@ static struct msm_hsusb_platform_data msm_hsusb_pdata = {
 	.num_functions	= ARRAY_SIZE(usb_functions_map),
 	.config_gpio    = NULL,
 };
-#endif
-
+//#endif
+//#endif //Anryl
 #ifdef CONFIG_USB_MSM_OTG_72K
 static int hsusb_rpc_connect(int connect)
 {
@@ -1496,7 +1541,7 @@ static int gs_init_flag = 0;   /*gsensor is not initialized*/
 static struct gs_platform_data gs_st_platform_data = {
     .adapt_fn = gsensor_support_dummyaddr,
     .slave_addr = (0x38 >> 1),  /*i2c slave address*/
-    .dev_id = NULL,        /*WHO AM I*/
+    .dev_id = 0x2A,        /*WHO AM I*/  //Anryl NULL
     .init_flag = &gs_init_flag,
 };
 #endif
@@ -1523,7 +1568,7 @@ static struct gs_platform_data gs_bma250_platform_data = {
 static struct gs_platform_data st303_gs_platform_data = {
     .adapt_fn = gsensor_support_dummyaddr,
     .slave_addr = (0x32 >> 1),  /*i2c slave address*/
-    .dev_id = NULL,    /*WHO AM I*/
+    .dev_id = 0x03,    /*WHO AM I*/ //Anryl NULL
     .init_flag = &gs_init_flag,
 };
 #endif
@@ -1854,26 +1899,26 @@ static void msm_camera_vreg_config(int vreg_en)
 
 static void config_camera_on_gpios(void)
 {
-#ifndef CONFIG_HUAWEI_CAMERA    
+//#ifndef CONFIG_HUAWEI_CAMERA    
 	int vreg_en = 1;
 
-	if (machine_is_msm7x25_ffa() ||
-	    machine_is_msm7x27_ffa())
+	/*if (machine_is_msm7x25_ffa() ||
+	    machine_is_msm7x27_ffa())*/ //Anryl
 		msm_camera_vreg_config(vreg_en);
-#endif
+//#endif
 	config_gpio_table(camera_on_gpio_table,
 		ARRAY_SIZE(camera_on_gpio_table));
 }
 
 static void config_camera_off_gpios(void)
 {
-#ifndef CONFIG_HUAWEI_CAMERA    
+//#ifndef CONFIG_HUAWEI_CAMERA    
 	int vreg_en = 0;
 
-	if (machine_is_msm7x25_ffa() ||
-	    machine_is_msm7x27_ffa())
+	/*if (machine_is_msm7x25_ffa() ||
+	    machine_is_msm7x27_ffa())*/ //Anryl
 		msm_camera_vreg_config(vreg_en);
-#endif
+//#endif
 	config_gpio_table(camera_off_gpio_table,
 		ARRAY_SIZE(camera_off_gpio_table));
 }
@@ -2318,7 +2363,8 @@ static struct platform_device *devices[] __initdata = {
 	&msm_device_hsusb_peripheral,
 	&mass_storage_device,
 #endif
-
+&msm_device_hsusb_peripheral,  //Anryl
+&mass_storage_device,		//Anryl
 #ifdef CONFIG_USB_ANDROID
 	&android_usb_device,
 #endif
@@ -2448,8 +2494,8 @@ static struct msm_usb_host_platform_data msm_usb_host_pdata = {
 };
 static void __init msm7x2x_init_host(void)
 {
-	if (machine_is_msm7x25_ffa() || machine_is_msm7x27_ffa())
-		return;
+	/*if (machine_is_msm7x25_ffa() || machine_is_msm7x27_ffa())
+		return;*///Anryl
 
 	msm_add_host(0, &msm_usb_host_pdata);
 }
@@ -2530,7 +2576,9 @@ static unsigned sdcc_cfg_data[][6] = {
 };
 
 static unsigned long vreg_sts, gpio_sts;
+#ifdef HUAWEI_BCM4329
 static unsigned mpp_mmc = 2;
+#endif
 static struct vreg *vreg_mmc;
 
 static void msm_sdcc_setup_gpio(int dev_id, unsigned int enable)
@@ -2702,7 +2750,7 @@ static int bcm_wifi_set_power(int enable)
 		mdelay(1);
 		
 		// WLAN chip to reset
-		ret = mpp_config_digital_out(20,
+		ret = mpp_config_digital_out(mpp_mmc,   //Anryl 20
 				MPP_CFG(MPP_DLOGIC_LVL_MSMP, MPP_DLOGIC_OUT_CTRL_HIGH));  
 		if (ret) 
 		{
@@ -2735,7 +2783,7 @@ static int bcm_wifi_set_power(int enable)
 		mdelay(1);
 
 		// WLAN chip down 
-		ret = mpp_config_digital_out(20,
+		ret = mpp_config_digital_out(mpp_mmc, // Anryl 20
 				MPP_CFG(MPP_DLOGIC_LVL_MSMP, MPP_DLOGIC_OUT_CTRL_LOW));  /* pull down */
 		if (ret) {
 			printk(KERN_ERR "%s: WL_RST_N failed to pull down(%d)\n",
@@ -3064,7 +3112,7 @@ u16 pid_index_to_pid(u32 pid_index)
     switch(pid_index)
     {
         case CDROM_INDEX:
-            usb_pid = curr_usb_pid_ptr->cdrom_pid;
+            usb_pid = curr_usb_pid_ptr->norm_pid; //Anryl cdrom
             break;
         case NORM_INDEX:
             usb_pid = curr_usb_pid_ptr->norm_pid;
@@ -3101,13 +3149,13 @@ void set_usb_pid_sn(u32 pid_index)
     {
         /* new requirement: usb tethering */
         case GOOGLE_WLAN_INDEX:
-            USB_PR(" set pid=0x%x, sn=%s\n", GOOGLE_WLAN_INDEX, NULL);
-            android_set_product_id(PID_WLAN);
+            USB_PR(" set pid=0x%x, sn=%s\n", curr_usb_pid_ptr->wlan_pid, "");
+            android_set_product_id(curr_usb_pid_ptr->wlan_pid);
             set_usb_sn(NULL);
             break;
         case GOOGLE_INDEX:
-            USB_PR(" set pid=0x%x, sn=%s\n", PID_GOOGLE_MS, usb_para_data.usb_para.usb_serial);
-            android_set_product_id(PID_GOOGLE_MS);
+            USB_PR(" set pid=0x%x, sn=%s\n", curr_usb_pid_ptr->google_pid, "");
+            android_set_product_id(curr_usb_pid_ptr->google_pid);
             set_usb_sn(usb_para_data.usb_para.usb_serial);
             break;
             
@@ -3118,7 +3166,7 @@ void set_usb_pid_sn(u32 pid_index)
             break;
             
         case CDROM_INDEX:
-            USB_PR(" set pid=0x%x, sn=%s\n", curr_usb_pid_ptr->cdrom_pid, "");
+            USB_PR(" set pid=0x%x, sn=%s\n", curr_usb_pid_ptr->norm_pid, "");    //Anryl cdrom
             android_set_product_id(curr_usb_pid_ptr->cdrom_pid);
             set_usb_sn(NULL);
             break;
@@ -3211,8 +3259,8 @@ static void proc_usb_para(void)
     android_usb_pdata.product_name = get_product_name();
     
     USB_PR(" curr_usb_pid_ptr: 0x%x, 0x%x, 0x%x, 0x%x, 0x%x\n", 
-        curr_usb_pid_ptr->cdrom_pid, 
-        curr_usb_pid_ptr->norm_pid, 
+        curr_usb_pid_ptr->norm_pid,  //Anryl 2
+        curr_usb_pid_ptr->cdrom_pid,  //Anryl 1
         curr_usb_pid_ptr->udisk_pid,
         curr_usb_pid_ptr->auth_pid,
         curr_usb_pid_ptr->google_pid);
@@ -3339,7 +3387,7 @@ static void __init msm7x2x_init(void)
 	msm_serial_debug_init(MSM_UART3_PHYS, INT_UART3,
 			&msm_device_uart3.dev, 1);
 #endif
-	if (machine_is_msm7x25_ffa() || machine_is_msm7x27_ffa()) {
+	//if (machine_is_msm7x25_ffa() || machine_is_msm7x27_ffa()) {  //Anryl
 		smc91x_resources[0].start = 0x98000300;
 		smc91x_resources[0].end = 0x980003ff;
 		smc91x_resources[1].start = MSM_GPIO_TO_INT(85);
@@ -3353,7 +3401,7 @@ static void __init msm7x2x_init(void)
 			       "%s: Err: Config GPIO-85 INT\n",
 				__func__);
 		}
-	}
+	//}  //Anryl
 
 	if (cpu_is_msm7x27())
 		msm7x2x_clock_data.max_axi_khz = 200000;
@@ -3379,13 +3427,13 @@ static void __init msm7x2x_init(void)
 	kgsl_pdata.set_grp3d_async = NULL;
 #endif
 
-#ifdef CONFIG_USB_FUNCTION
+// #ifdef CONFIG_USB_FUNCTION //Anryl
 	msm_hsusb_pdata.swfi_latency =
-		msm7x27_pm_data
+		msm7x25_pm_data //Anryl x27
 		[MSM_PM_SLEEP_MODE_RAMP_DOWN_AND_WAIT_FOR_INTERRUPT].latency;
 
 	msm_device_hsusb_peripheral.dev.platform_data = &msm_hsusb_pdata;
-#endif
+// #endif //Anryl
 
 #ifdef CONFIG_USB_AUTO_INSTALL
     proc_usb_para();
@@ -3406,7 +3454,7 @@ static void __init msm7x2x_init(void)
 
 #ifdef CONFIG_USB_GADGET
 	msm_gadget_pdata.swfi_latency =
-		msm7x27_pm_data
+		msm7x25_pm_data //Anryl x27
 		[MSM_PM_SLEEP_MODE_RAMP_DOWN_AND_WAIT_FOR_INTERRUPT].latency;
 	msm_device_gadget_peripheral.dev.platform_data = &msm_gadget_pdata;
 #endif
